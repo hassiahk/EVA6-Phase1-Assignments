@@ -1,4 +1,4 @@
-### Problem Statement
+## Problem Statement
 Design a neural network that can take inputs as below and can predict the outputs as below:
 
 **Inputs** : an MNIST image and a Random number.
@@ -9,7 +9,7 @@ Design a neural network that can take inputs as below and can predict the output
 
 To execute, run [EVA6_Session_3_Assignment.ipynb](https://github.com/hassiahk/EVA6-Phase1-Assignments/blob/main/Session-3/EVA6_Session_3_Assignment.ipynb) locally or use this [link](https://colab.research.google.com/drive/1zVnbS3jnDvBPmI8Lx1Eo08WYed6o40us#scrollTo=sEEhuky5L3Q0) to directly run on Google Colab.
 
-### Data Representation
+## Data Representation
 
 We represent the dataset as shown below
 
@@ -17,7 +17,7 @@ We represent the dataset as shown below
 |----|----|----|----|
 |[28x28]| 3 | 5 | 8 |
 
-### Data Generation
+## Data Generation
 
 We generated our data using the ``Dataset`` class from ``torch.utils.data``.
 
@@ -40,7 +40,7 @@ class MNISTRandDataset(Dataset):
         return image, rand_num_tensor, label, sum_label
 ```
 
-### Data Input Combination
+## Data Input Combination
 
 We have concatenated the final probabilities of 10 classes for a MNIST image from fully connected layer (``self.fc2``) with the Random number represented in 10-bit one hot encoded vector.
 
@@ -50,11 +50,11 @@ After this we get a tensor of size 20, which we pass through final fully connect
 
 Here ``out → MNIST digit`` and ``sum_out → MNIST digit + random number``
 
-### Model Architecture
+## Model Architecture
 
 ![Model_Architecture](https://github.com/hassiahk/EVA6-Phase1-Assignments/blob/main/Session-3/images/Model_Architecture.png)
 
-### Loss Function
+## Loss Function
 
 We used 2 losses, one for each ouput, and averaged them to get total loss.
 
@@ -68,7 +68,7 @@ Since this is a classification task, where we had to classify numbers for both t
 
 ![CE3](https://github.com/hassiahk/EVA6-Phase1-Assignments/blob/main/Session-3/images/CE3.png)
 
-### Evaluation Methodology
+## Evaluation Methodology
 
 We created a test dataset of 10,000 images using the same ``Dataset`` class as train set.
 
@@ -89,6 +89,6 @@ Below are the results of our model predictions at each epoch. We have trained th
 
 ![Accuracy](https://github.com/hassiahk/EVA6-Phase1-Assignments/blob/main/Session-3/images/Accuracy.png)
 
-#### Team Members
+## Team Members
 
 Haswanth Aekula, Shreeyash Pawar, Smita Kumari, Manjeera Jagiri
