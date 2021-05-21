@@ -7,7 +7,7 @@ Design a neural network that can take inputs as below and can predict the output
 
 ![Problem_Statement](https://github.com/hassiahk/EVA6-Phase1-Assignments/blob/main/Session-3/images/Problem_Statement.png)
 
-To execute, run [EVA6_Session_3_Assignment.ipynb](https://github.com/hassiahk/EVA6-Phase1-Assignments/blob/main/Session-3/EVA6_Session_3_Assignment.ipynb) locally or use this [link](https://colab.research.google.com/drive/1zVnbS3jnDvBPmI8Lx1Eo08WYed6o40us#scrollTo=sEEhuky5L3Q0) to directly run on Google Colab.
+To execute our code, run [EVA6_Session_3_Assignment.ipynb](https://github.com/hassiahk/EVA6-Phase1-Assignments/blob/main/Session-3/EVA6_Session_3_Assignment.ipynb) locally or use this [link](https://colab.research.google.com/drive/1zVnbS3jnDvBPmI8Lx1Eo08WYed6o40us#scrollTo=sEEhuky5L3Q0) to directly run on Google Colab.
 
 ## Data Representation
 We represent the dataset as shown below:
@@ -41,7 +41,7 @@ class MNISTRandDataset(Dataset):
 ## Data Input Combination
 We have concatenated the final probabilities of 10 classes for a MNIST image from fully connected layer (``self.fc2``) with the Random number represented in 10-bit one hot encoded vector.
 
-After this we get a tensor of size 20, which we pass through final fully connected layer (self.fc3) with ``input_features = 20`` and ``output_features = 19``, to get all possible probabilities of sums which are 19 (0 → 18).
+After this we get a tensor of size 20, which we pass through final fully connected layer (``self.fc3``) with ``input_features = 20`` and ``output_features = 19``, to get all possible probabilities of sums which are 19 (0 → 18).
 
 ![Input_Combination](https://github.com/hassiahk/EVA6-Phase1-Assignments/blob/main/Session-3/images/Input_Combination.png)
 
@@ -55,7 +55,7 @@ We used 2 losses, one for each ouput, and averaged them to get total loss.
 
 The individual losses used were ``Cross Entropy`` loss.
 
-Since this is a classification task, where we had to classify numbers for both the outputs we have used cross entropy loss which is calculated as shown below:
+Since this is a classification task where we had to classify numbers for both the outputs, we have used cross entropy loss which is calculated as shown below:
 
 ![CE1](https://github.com/hassiahk/EVA6-Phase1-Assignments/blob/main/Session-3/images/CE1.png)
 
