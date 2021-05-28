@@ -44,7 +44,7 @@ where,
 
 ### Initial Weights
 ```
-w1 = 0.15, w2 = 0.2, w3 = 0.2, w4 = 0.3, w5 = 0.4, w6 = 0.45, w7 = 0.5, w8 = 0.55
+w1 = 0.15, w2 = 0.2, w3 = 0.25, w4 = 0.3, w5 = 0.4, w6 = 0.45, w7 = 0.5, w8 = 0.55
 ```
 
 ## Back Propagation using Gradient Descent
