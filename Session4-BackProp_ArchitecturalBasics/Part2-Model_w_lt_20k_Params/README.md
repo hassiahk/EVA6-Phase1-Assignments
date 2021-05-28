@@ -1,5 +1,7 @@
 # MNIST using <20K params with 99.4% accuracy
 
+[Colab Link](https://colab.research.google.com/drive/17f2xVx49GD-gztTLKppw7GQXF_QcgYkp?authuser=1#scrollTo=gg0JzFlEXN7L)
+
 **Approach:**
 
 1. Try to use minimal number of convolutions, with less channels, in accordance with RF required
