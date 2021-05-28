@@ -1,14 +1,21 @@
 # Back Propagation
 We are using ``Gradient Descent`` algorithm to update our weights.
 
+You can download or view the excel in Google Sheets using the below links:
+
+[Download](https://github.com/hassiahk/EVA6-Phase1-Assignments/raw/main/Session4-BackProp_Model_w_lt_20k/Part1-Back_Propagation/Back_Propagation.xlsx) | [Google Sheet](https://drive.google.com/file/d/11sM8N3gR3W5K56zKxsVBbVCXDeJaqRhl/view?usp=sharing)
+
+![Sreenshot](images/Excel_Screenshot.PNG)
+
 ## Model Architecture
 Below is the neural network architecture which has one input layer, one hidden layer and one output layer. Every layer is a fully connected layer.
-![Model Architecture](Model_Architecure.PNG)
+
+![Model Architecture](images/Model_Architecure.PNG)
 
 ## Gradient Descent
 We will be using ``Gradient Descent`` algorithm to update our weights. Below is the equation used to update each weight.
 
-<div align="center"><a href="https://www.codecogs.com/eqnedit.php?latex=\dpi{120}&space;W_{i\_new}=W_{i}-\eta&space;*\frac{\partial&space;E_{total}}{\partial&space;W_{i}}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dpi{120}&space;W_{i\_new}=W_{i}-\eta&space;*\frac{\partial&space;E_{total}}{\partial&space;W_{i}}" title="W_{i\_new}=W_{i}-\eta *\frac{\partial E_{total}}{\partial W_{i}}" /></a></div>
+<div align="center"><a href="https://www.codecogs.com/eqnedit.php?latex=\dpi{120}&space;W_{i}&space;=&space;W_{i}-\eta&space;*&space;\frac{\partial&space;E_{total}}{\partial&space;W_{i}}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dpi{120}&space;W_{i}&space;=&space;W_{i}-\eta&space;*&space;\frac{\partial&space;E_{total}}{\partial&space;W_{i}}" title="W_{i} = W_{i}-\eta * \frac{\partial E_{total}}{\partial W_{i}}" /></a></div>
 
 ## Forward Propagation
 At hidden layer, we have ``h1`` and ``h2`` neurons whose values can be calculated using below equations:
@@ -34,6 +41,11 @@ And if we look at the architecture, we can see that our total loss (``E_total``)
 where,
 
 <div align="center"><a href="https://www.codecogs.com/eqnedit.php?latex=\dpi{120}&space;\begin{multline}&space;{\color{Black}&space;E_1&space;=&space;\frac&space;{1}{2}&space;*&space;(t_1&space;-&space;a\_o_1)^2&space;\&space;,&space;\&space;where&space;\&space;\&space;t_1&space;\&space;\&space;is&space;\&space;\&space;target_1}&space;\\&space;\\&space;E_2&space;=&space;\frac&space;{1}{2}&space;*&space;(t_2&space;-&space;a\_o_2)^2&space;\&space;,&space;\&space;where&space;\&space;\&space;t_2&space;\&space;\&space;is&space;\&space;\&space;target_2&space;\end{multline}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dpi{120}&space;\begin{multline}&space;{\color{Black}&space;E_1&space;=&space;\frac&space;{1}{2}&space;*&space;(t_1&space;-&space;a\_o_1)^2&space;\&space;,&space;\&space;where&space;\&space;\&space;t_1&space;\&space;\&space;is&space;\&space;\&space;target_1}&space;\\&space;\\&space;E_2&space;=&space;\frac&space;{1}{2}&space;*&space;(t_2&space;-&space;a\_o_2)^2&space;\&space;,&space;\&space;where&space;\&space;\&space;t_2&space;\&space;\&space;is&space;\&space;\&space;target_2&space;\end{multline}" title="\begin{multline} {\color{Black} E_1 = \frac {1}{2} * (t_1 - a\_o_1)^2 \ , \ where \ \ t_1 \ \ is \ \ target_1} \\ \\ E_2 = \frac {1}{2} * (t_2 - a\_o_2)^2 \ , \ where \ \ t_2 \ \ is \ \ target_2 \end{multline}" /></a></div>
+
+### Initial Weights
+```
+w1 = 0.15, w2 = 0.2, w3 = 0.2, w4 = 0.3, w5 = 0.4, w6 = 0.45, w7 = 0.5, w8 = 0.55
+```
 
 ## Back Propagation using Gradient Descent
 We need to find the gradient of ``E_total`` w.r.t ``w1``, ``w2``, ``w3``, ``w4``, ``w5``, ``w6``, ``w7``, ``w8``
@@ -123,4 +135,11 @@ Similarly, the gradient of ``E_total`` w.r.t ``w4`` is
 
 That's it!! Now we can update the weights using the below equation:
 
-<div align="center"><a href="https://www.codecogs.com/eqnedit.php?latex=\dpi{120}&space;W_{i\_new}=W_{i}-\eta&space;*\frac{\partial&space;E_{total}}{\partial&space;W_{i}}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dpi{120}&space;W_{i\_new}=W_{i}-\eta&space;*\frac{\partial&space;E_{total}}{\partial&space;W_{i}}" title="W_{i\_new}=W_{i}-\eta *\frac{\partial E_{total}}{\partial W_{i}}" /></a></div>
+<div align="center"><a href="https://www.codecogs.com/eqnedit.php?latex=\dpi{120}&space;W_{i}&space;=&space;W_{i}-\eta&space;*&space;\frac{\partial&space;E_{total}}{\partial&space;W_{i}}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dpi{120}&space;W_{i}&space;=&space;W_{i}-\eta&space;*&space;\frac{\partial&space;E_{total}}{\partial&space;W_{i}}" title="W_{i} = W_{i}-\eta * \frac{\partial E_{total}}{\partial W_{i}}" /></a></div>
+
+## Loss with Different Learning Rates
+
+![LR Comparison for Loss](images/LR_Comparison.PNG)
+
+## Team Members
+Haswanth Aekula, Shreeyash Pawar, Smita Kumari
