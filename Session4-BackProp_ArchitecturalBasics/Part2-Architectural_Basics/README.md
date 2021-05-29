@@ -1,5 +1,5 @@
 ## Problem Statement
-Using MNIST data try to achieve a validation accuracy of atleast 99.4% within 19 epochs of training the model and ensuring the number of parameters are less than 20,000.
+Using MNIST data try to achieve a validation accuracy of atleast 99.4% within 19 epochs of training the model and ensuring that the number of parameters are less than 20,000.
 
 ## Approach
 - Used minimal number of convolutions, with less channels, in accordance with RF required.
@@ -13,7 +13,7 @@ Using MNIST data try to achieve a validation accuracy of atleast 99.4% within 19
 [Colab Link](https://colab.research.google.com/drive/1RlAh4-slFVsudz33CuBK4ey1JP5fFcf1?usp=sharing)
 
 ### Some Details about the Model
-- **Number of Parameters: 13,914**
+- **Number of Parameters - 13,914**
 - **Augmentations - RandomAffine**
 - **Dropout - 0.1**
 - **Learning Rate - 0.018**
@@ -207,10 +207,11 @@ Test set: Average loss: 0.0167, Accuracy: 9948/10000 (99.48%)
 
 ## Plots
 
-Loss vs Num Epochs
-
+### Loss vs Num Epochs
 ![Loss Curve](images/Loss.png)
 
-Accuracy vs Num Epochs
-
+### Accuracy vs Num Epochs
 ![Accuracy Curve](images/Accuracy.png)
+
+### Team Members
+Haswanth Aekula, Shreeyash Pawar, Smita Kumari
