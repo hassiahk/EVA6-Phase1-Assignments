@@ -5,11 +5,11 @@
   - [1.4. ResNet model training and visualization Notebook](#14-resnet-model-training-and-visualization-notebook)
     - [1.4.1. Importing code from common model repo into the notebook](#141-importing-code-from-common-model-repo-into-the-notebook)
     - [1.4.2. Custom ResNet Model summary](#142-custom-resnet-model-summary)
-    - [lr_finder to find maximum LR](#lr_finder-to-find-maximum-lr)
-    - [1.4.3. Training and Testing logs](#143-training-and-testing-logs)
-    - [1.4.4. Misclassified images](#144-misclassified-images)
-    - [1.4.5. Plots for Train and Test Loss and Accuracy](#145-plots-for-train-and-test-loss-and-accuracy)
-    - [1.4.6. GradCam output for misclassified images](#146-gradcam-output-for-misclassified-images)
+    - [1.4.3. lr_finder to find maximum LR](#143-lr_finder-to-find-maximum-lr)
+    - [1.4.4. Training and Testing logs](#144-training-and-testing-logs)
+    - [1.4.5. Misclassified images](#145-misclassified-images)
+    - [1.4.6. Plots for Train and Test Loss and Accuracy](#146-plots-for-train-and-test-loss-and-accuracy)
+    - [1.4.7. GradCam output for misclassified images](#147-gradcam-output-for-misclassified-images)
 
 # 1. Session 9 Assignment: LR_Schedulers, ResNets and Higher Receptive Fields
 
@@ -223,7 +223,7 @@ Estimated Total Size (MB): 31.22
 ----------------------------------------------------------------
 ```
 
-### lr_finder to find maximum LR
+### 1.4.3. lr_finder to find maximum LR
 
 ```python
 from utils.lr_finder import find_lr
@@ -238,7 +238,7 @@ Suggested LR: 4.16E-02
 
 ![picture 5](images/94cf5d034b18f0dfc377b9c92c174a08e12b256937eb29d7d7c07e533580d3bf.png)  
 
-### 1.4.3. Training and Testing logs
+### 1.4.4. Training and Testing logs
 
 from [CIFAR10_Custom_ResNet.ipynb](https://github.com/hassiahk/EVA6-Phase1-Assignments/blob/main/Session9-ResNets_Higher_RFs/CIFAR10_Custom_ResNet.ipynb)
 
@@ -368,19 +368,19 @@ Train Loss=0.06850629299879074 Batch_id=97 LR= 0.00000 Train Accuracy= 98.54: 10
 
 ```
 
-### 1.4.4. Misclassified images
+### 1.4.5. Misclassified images
 
 from [CIFAR10_Custom_ResNet.ipynb](https://github.com/hassiahk/EVA6-Phase1-Assignments/blob/main/Session9-ResNets_Higher_RFs/CIFAR10_Custom_ResNet.ipynb)
 
 ![picture 6](images/03729b22018db9a8ab1ba59d4688891a58ecf4dba08b2b164bb7808338438f2f.png)  
 
-### 1.4.5. Plots for Train and Test Loss and Accuracy
+### 1.4.6. Plots for Train and Test Loss and Accuracy
 
 from [CIFAR10_Custom_ResNet.ipynb](https://github.com/hassiahk/EVA6-Phase1-Assignments/blob/main/Session9-ResNets_Higher_RFs/CIFAR10_Custom_ResNet.ipynb)
 
 ![picture 7](images/c76b50ce216b461f4b9f2ff6ad13265f659470350de7d385a65b85ab1712726d.png)  
 
-### 1.4.6. GradCam output for misclassified images
+### 1.4.7. GradCam output for misclassified images
 
 from [CIFAR10_Custom_ResNet.ipynb](https://github.com/hassiahk/EVA6-Phase1-Assignments/blob/main/Session9-ResNets_Higher_RFs/CIFAR10_Custom_ResNet.ipynb)
 
