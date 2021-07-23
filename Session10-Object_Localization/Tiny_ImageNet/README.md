@@ -2,7 +2,7 @@
 Train ResNet18 on [Tiny ImageNet](http://cs231n.stanford.edu/tiny-imagenet-200.zip) with 70/30 split for 50 Epochs. The target is to achieve 50%+ validation accuracy.
 
 ## Augmented Tiny ImageNet Dataset
-![Tiny ImageNet](Tiny_ImageNet/images/augmented_images_batch.png)
+![Tiny ImageNet](images/augmented_images_batch.png)
 
 ### Some Details about Tiny ImageNet
 - Train set - 100000 images
@@ -38,7 +38,7 @@ Modularized GIT repository for training vision models in PyTorch: [train-your-mo
 ```
 
 ## Training Details
-We achieved a `validation accuracy` of `54.45%` and a `train accuracy` of `57.12%` in the `50th epoch`. The final notebook is [here](Tiny_ImageNet/ResNet18_Tiny_ImageNet_Experiment2.ipynb).
+We achieved a `validation accuracy` of `54.45%` and a `train accuracy` of `57.12%` in the `50th epoch`. The final notebook is [here](ResNet18_Tiny_ImageNet_Experiment2.ipynb).
 - Epochs - 50
 - Data Augmentation
   - RandomCrop(64, padding=4)
@@ -370,14 +370,14 @@ Train Loss=1.8948308229446411 Batch_id=150 LR= 0.00000 Train Accuracy= 57.12: 10
 
 ## Train vs Test Accuracy and Train vs Test Loss
 
-![Train Metrics](Tiny_ImageNet/images/train_metrics.png)
-![Test Metrics](Tiny_ImageNet/images/test_metrics.png)
+![Train Metrics](images/train_metrics.png)
+![Test Metrics](images/test_metrics.png)
 
 ## Misclassified Images
-![Misclassified Images](Tiny_ImageNet/images/misclassified_images.png)
+![Misclassified Images](images/misclassified_images.png)
 
 ## GradCAM
-![GradCAM](Tiny_ImageNet/images/gradcam.png)
+![GradCAM](images/gradcam.png)
 
 ## Team Members
 
