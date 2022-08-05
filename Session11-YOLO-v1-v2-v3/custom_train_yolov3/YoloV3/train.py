@@ -16,9 +16,9 @@ except:
     # print('Apex recommended for mixed precision and faster training: https://github.com/NVIDIA/apex')
     mixed_precision = False  # not installed
 
-wdir = 'weights' + os.sep  # weights dir
-last = wdir + 'last.pt'
-best = wdir + 'best.pt'
+wdir = f'weights{os.sep}'
+last = f'{wdir}last.pt'
+best = f'{wdir}best.pt'
 results_file = 'results.txt'
 
 # Hyperparameters https://github.com/ultralytics/yolov3/issues/310
@@ -42,10 +42,8 @@ hyp = {'giou': 3.54,  # giou loss gain
        'scale': 0.05 * 0,  # image scale (+/- gain)
        'shear': 0.641 * 0}  # image shear (+/- deg)
 
-# Overwrite hyp with hyp*.txt (optional)
-f = glob.glob('hyp*.txt')
-if f:
-    print('Using %s' % f[0])
+if f := glob.glob('hyp*.txt'):
+    print(f'Using {f[0]}')
     for k, v in zip(hyp.keys(), np.loadtxt(f[0])):
         hyp[k] = v
 

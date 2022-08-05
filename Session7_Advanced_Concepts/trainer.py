@@ -27,10 +27,10 @@ def get_lr(optimizer):
 def train(model, device, train_loader, optimizer, epoch, train_acc, train_loss, lambda_l1, criterion, lrs, grad_clip=None,scheduler=None):
     model.train()
     pbar = tqdm(train_loader)
-  
+
     correct = 0
     processed = 0
-  
+
     for batch_idx, (data, target) in enumerate(pbar):
         data, target = data.to(device), target.to(device)
 
@@ -56,7 +56,7 @@ def train(model, device, train_loader, optimizer, epoch, train_acc, train_loss, 
         # Gradient clipping
         if grad_clip: 
             nn.utils.clip_grad_value_(model.parameters(), grad_clip)
-            
+
         optimizer.step()
         # scheduler.step()
         lrs.append(get_lr(optimizer))
@@ -89,7 +89,7 @@ def test(model, device, test_loader, test_acc, test_losses, criterion):
     print('\n: Average Test loss: {:.4f}, Test Accuracy: {}/{} ({:.2f}%)\n'.format(
         test_loss, correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
-    
+
     test_acc.append(100. * correct / len(test_loader.dataset))
 
 

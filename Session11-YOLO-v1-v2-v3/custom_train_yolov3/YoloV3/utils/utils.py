@@ -68,9 +68,8 @@ def labels_to_image_weights(labels, nc=80, class_weights=np.ones(80)):
     # Produces image weights based on class mAPs
     n = len(labels)
     class_counts = np.array([np.bincount(labels[i][:, 0].astype(np.int), minlength=nc) for i in range(n)])
-    image_weights = (class_weights.reshape(1, nc) * class_counts).sum(1)
     # index = random.choices(range(n), weights=image_weights, k=1)  # weight image sample
-    return image_weights
+    return (class_weights.reshape(1, nc) * class_counts).sum(1)
 
 
 def coco_class_weights():  # frequency of each class in coco train2014
@@ -88,15 +87,88 @@ def coco_class_weights():  # frequency of each class in coco train2014
 
 
 def coco80_to_coco91_class():  # converts 80-index (val2014) to 91-index (paper)
-    # https://tech.amikelive.com/node-718/what-object-categories-labels-are-in-coco-dataset/
-    # a = np.loadtxt('data/coco.names', dtype='str', delimiter='\n')
-    # b = np.loadtxt('data/coco_paper.names', dtype='str', delimiter='\n')
-    # x1 = [list(a[i] == b).index(True) + 1 for i in range(80)]  # darknet to coco
-    # x2 = [list(b[i] == a).index(True) if any(b[i] == a) else None for i in range(91)]  # coco to darknet
-    x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 28, 31, 32, 33, 34,
-         35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
-         64, 65, 67, 70, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 86, 87, 88, 89, 90]
-    return x
+    return [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        27,
+        28,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        67,
+        70,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+    ]
 
 
 def xyxy2xywh(x):
@@ -193,32 +265,21 @@ def ap_per_class(tp, conf, pred_cls, target_cls):
 
         if n_p == 0 or n_gt == 0:
             continue
-        else:
-            # Accumulate FPs and TPs
-            fpc = (1 - tp[i]).cumsum(0)
-            tpc = tp[i].cumsum(0)
+        # Accumulate FPs and TPs
+        fpc = (1 - tp[i]).cumsum(0)
+        tpc = tp[i].cumsum(0)
 
-            # Recall
-            recall = tpc / (n_gt + 1e-16)  # recall curve
-            r[ci] = np.interp(-pr_score, -conf[i], recall[:, 0])  # r at pr_score, negative x, xp because xp decreases
+        # Recall
+        recall = tpc / (n_gt + 1e-16)  # recall curve
+        r[ci] = np.interp(-pr_score, -conf[i], recall[:, 0])  # r at pr_score, negative x, xp because xp decreases
 
-            # Precision
-            precision = tpc / (tpc + fpc)  # precision curve
-            p[ci] = np.interp(-pr_score, -conf[i], precision[:, 0])  # p at pr_score
+        # Precision
+        precision = tpc / (tpc + fpc)  # precision curve
+        p[ci] = np.interp(-pr_score, -conf[i], precision[:, 0])  # p at pr_score
 
-            # AP from recall-precision curve
-            for j in range(tp.shape[1]):
-                ap[ci, j] = compute_ap(recall[:, j], precision[:, j])
-
-            # Plot
-            # fig, ax = plt.subplots(1, 1, figsize=(5, 5))
-            # ax.plot(recall, precision)
-            # ax.set_xlabel('Recall')
-            # ax.set_ylabel('Precision')
-            # ax.set_xlim(0, 1.01)
-            # ax.set_ylim(0, 1.01)
-            # fig.tight_layout()
-            # fig.savefig('PR_curve.png', dpi=300)
+        # AP from recall-precision curve
+        for j in range(tp.shape[1]):
+            ap[ci, j] = compute_ap(recall[:, j], precision[:, j])
 
     # Compute F1 score (harmonic mean of precision and recall)
     f1 = 2 * p * r / (p + r + 1e-16)
@@ -247,12 +308,10 @@ def compute_ap(recall, precision):
     method = 'interp'  # methods: 'continuous', 'interp'
     if method == 'interp':
         x = np.linspace(0, 1, 101)  # 101-point interp (COCO)
-        ap = np.trapz(np.interp(x, mrec, mpre), x)  # integrate
+        return np.trapz(np.interp(x, mrec, mpre), x)
     else:  # 'continuous'
         i = np.where(mrec[1:] != mrec[:-1])[0]  # points where x axis (recall) changes
-        ap = np.sum((mrec[i + 1] - mrec[i]) * mpre[i + 1])  # area under curve
-
-    return ap
+        return np.sum((mrec[i + 1] - mrec[i]) * mpre[i + 1])
 
 
 def bbox_iou(box1, box2, x1y1x2y2=True, GIoU=False, DIoU=False, CIoU=False):
@@ -282,21 +341,20 @@ def bbox_iou(box1, box2, x1y1x2y2=True, GIoU=False, DIoU=False, CIoU=False):
     if GIoU or DIoU or CIoU:
         cw = torch.max(b1_x2, b2_x2) - torch.min(b1_x1, b2_x1)  # convex (smallest enclosing box) width
         ch = torch.max(b1_y2, b2_y2) - torch.min(b1_y1, b2_y1)  # convex height
-        if GIoU:  # Generalized IoU https://arxiv.org/pdf/1902.09630.pdf
-            c_area = cw * ch + 1e-16  # convex area
-            return iou - (c_area - union) / c_area  # GIoU
-        if DIoU or CIoU:  # Distance or Complete IoU https://arxiv.org/abs/1911.08287v1
-            # convex diagonal squared
-            c2 = cw ** 2 + ch ** 2 + 1e-16
-            # centerpoint distance squared
-            rho2 = ((b2_x1 + b2_x2) - (b1_x1 + b1_x2)) ** 2 / 4 + ((b2_y1 + b2_y2) - (b1_y1 + b1_y2)) ** 2 / 4
-            if DIoU:
-                return iou - rho2 / c2  # DIoU
-            elif CIoU:  # https://github.com/Zzh-tju/DIoU-SSD-pytorch/blob/master/utils/box/box_utils.py#L47
-                v = (4 / math.pi ** 2) * torch.pow(torch.atan(w2 / h2) - torch.atan(w1 / h1), 2)
-                with torch.no_grad():
-                    alpha = v / (1 - iou + v)
-                return iou - (rho2 / c2 + v * alpha)  # CIoU
+    if GIoU:  # Generalized IoU https://arxiv.org/pdf/1902.09630.pdf
+        c_area = cw * ch + 1e-16  # convex area
+        return iou - (c_area - union) / c_area  # GIoU
+    if DIoU or CIoU:  # Distance or Complete IoU https://arxiv.org/abs/1911.08287v1
+        # convex diagonal squared
+        c2 = cw ** 2 + ch ** 2 + 1e-16
+        # centerpoint distance squared
+        rho2 = ((b2_x1 + b2_x2) - (b1_x1 + b1_x2)) ** 2 / 4 + ((b2_y1 + b2_y2) - (b1_y1 + b1_y2)) ** 2 / 4
+        if DIoU:
+            return iou - rho2 / c2  # DIoU
+        v = (4 / math.pi ** 2) * torch.pow(torch.atan(w2 / h2) - torch.atan(w1 / h1), 2)
+        with torch.no_grad():
+            alpha = v / (1 - iou + v)
+        return iou - (rho2 / c2 + v * alpha)  # CIoU
 
     return iou
 
@@ -395,9 +453,7 @@ def compute_loss(p, targets, model):  # predictions, targets, model
         tobj = torch.zeros_like(pi[..., 0])  # target obj
         np += tobj.numel()
 
-        # Compute losses
-        nb = len(b)
-        if nb:  # number of targets
+        if nb := len(b):
             ng += nb
             ps = pi[b, a, gj, gi]  # prediction subset corresponding to targets
             # ps[:, 2:4] = torch.sigmoid(ps[:, 2:4])  # wh power loss (uncomment)
@@ -415,10 +471,6 @@ def compute_loss(p, targets, model):  # predictions, targets, model
                 t[range(nb), tcls[i]] = cp
                 lcls += BCEcls(ps[:, 5:], t)  # BCE
                 # lcls += CE(ps[:, 5:], tcls[i])  # CE
-
-            # Append targets to text file
-            # with open('targets.txt', 'a') as file:
-            #     [file.write('%11.5g ' * 4 % tuple(x) + '\n') for x in torch.cat((txy[i], twh[i]), 1)]
 
         lobj += BCEobj(pi[..., 4], tobj)  # obj loss
 
@@ -620,7 +672,7 @@ def coco_class_count(path='../coco/labels/train2014/'):
     # Histogram of occurrences per class
     nc = 80  # number classes
     x = np.zeros(nc, dtype='int32')
-    files = sorted(glob.glob('%s/*.*' % path))
+    files = sorted(glob.glob(f'{path}/*.*'))
     for i, file in enumerate(files):
         labels = np.loadtxt(file, dtype=np.float32).reshape(-1, 5)
         x += np.bincount(labels[:, 0].astype('int32'), minlength=nc)
@@ -629,8 +681,8 @@ def coco_class_count(path='../coco/labels/train2014/'):
 
 def coco_only_people(path='../coco/labels/train2017/'):  # from utils.utils import *; coco_only_people()
     # Find images with only people
-    files = sorted(glob.glob('%s/*.*' % path))
-    for i, file in enumerate(files):
+    files = sorted(glob.glob(f'{path}/*.*'))
+    for file in files:
         labels = np.loadtxt(file, dtype=np.float32).reshape(-1, 5)
         if all(labels[:, 0] == 0):
             print(labels.shape[0], file)
@@ -646,7 +698,7 @@ def select_best_evolve(path='evolve*.txt'):  # from utils.utils import *; select
 def crop_images_random(path='../images/', scale=0.50):  # from utils.utils import *; crop_images_random()
     # crops images into random squares up to scale fraction
     # WARNING: overwrites images!
-    for file in tqdm(sorted(glob.glob('%s/*.*' % path))):
+    for file in tqdm(sorted(glob.glob(f'{path}/*.*'))):
         img = cv2.imread(file)  # BGR
         if img is not None:
             h, w = img.shape[:2]
@@ -673,7 +725,7 @@ def coco_single_class_labels(path='../coco/labels/train2014/', label_class=43):
     os.makedirs('new/')  # make new output folder
     os.makedirs('new/labels/')
     os.makedirs('new/images/')
-    for file in tqdm(sorted(glob.glob('%s/*.*' % path))):
+    for file in tqdm(sorted(glob.glob(f'{path}/*.*'))):
         with open(file, 'r') as f:
             labels = np.array([x.split() for x in f.read().splitlines()], dtype=np.float32)
         i = labels[:, 0] == label_class
@@ -682,7 +734,7 @@ def coco_single_class_labels(path='../coco/labels/train2014/', label_class=43):
             labels[:, 0] = 0  # reset class to 0
             with open('new/images.txt', 'a') as f:  # add image to dataset list
                 f.write(img_file + '\n')
-            with open('new/labels/' + Path(file).name, 'a') as f:  # write label
+            with open(f'new/labels/{Path(file).name}', 'a') as f:  # write label
                 for l in labels[i]:
                     f.write('%g %.6f %.6f %.6f %.6f\n' % tuple(l))
             shutil.copyfile(src=img_file, dst='new/images/' + Path(file).name.replace('txt', 'jpg'))  # copy images
@@ -775,7 +827,7 @@ def print_mutation(hyp, results, bucket=''):
     print('\n%s\n%s\nEvolved fitness: %s\n' % (a, b, c))
 
     if bucket:
-        os.system('gsutil cp gs://%s/evolve.txt .' % bucket)  # download evolve.txt
+        os.system(f'gsutil cp gs://{bucket}/evolve.txt .')
 
     with open('evolve.txt', 'a') as f:  # append result
         f.write(c + b + '\n')
@@ -783,7 +835,7 @@ def print_mutation(hyp, results, bucket=''):
     np.savetxt('evolve.txt', x[np.argsort(-fitness(x))], '%10.3g')  # save sort by fitness
 
     if bucket:
-        os.system('gsutil cp evolve.txt gs://%s' % bucket)  # upload evolve.txt
+        os.system(f'gsutil cp evolve.txt gs://{bucket}')
 
 
 def apply_classifier(x, model, img, im0):
@@ -805,7 +857,7 @@ def apply_classifier(x, model, img, im0):
             # Classes
             pred_cls1 = d[:, 5].long()
             ims = []
-            for j, a in enumerate(d):  # per item
+            for a in d:
                 cutout = im0[i][int(a[1]):int(a[3]), int(a[0]):int(a[2])]
                 im = cv2.resize(cutout, (224, 224))  # BGR
                 # cv2.imwrite('test%i.jpg' % j, cutout)
@@ -990,7 +1042,7 @@ def plot_results(start=0, stop=0, bucket='', id=()):  # from utils.utils import 
                 if i in [5, 6, 7]:  # share train and val loss y axes
                     ax[i].get_shared_y_axes().join(ax[i], ax[i - 5])
         except:
-            print('Warning: Plotting error for %s, skipping file' % f)
+            print(f'Warning: Plotting error for {f}, skipping file')
 
     fig.tight_layout()
     ax[1].legend()

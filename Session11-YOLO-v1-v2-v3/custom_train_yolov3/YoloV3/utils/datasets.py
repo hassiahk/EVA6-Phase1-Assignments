@@ -31,9 +31,7 @@ def exif_size(img):
     s = img.size  # (width, height)
     try:
         rotation = dict(img._getexif().items())[orientation]
-        if rotation == 6:  # rotation 270
-            s = (s[1], s[0])
-        elif rotation == 8:  # rotation 90
+        if rotation in [6, 8]:  # rotation 270
             s = (s[1], s[0])
     except:
         pass
@@ -63,7 +61,7 @@ class LoadImages:  # for inference
             self.new_video(videos[0])  # new video
         else:
             self.cap = None
-        assert self.nF > 0, 'No images or videos found in ' + path
+        assert self.nF > 0, f'No images or videos found in {path}'
 
     def __iter__(self):
         self.count = 0
@@ -81,12 +79,11 @@ class LoadImages:  # for inference
             if not ret_val:
                 self.count += 1
                 self.cap.release()
-                if self.count == self.nF:  # last video
+                if self.count == self.nF:
                     raise StopIteration
-                else:
-                    path = self.files[self.count]
-                    self.new_video(path)
-                    ret_val, img0 = self.cap.read()
+                path = self.files[self.count]
+                self.new_video(path)
+                ret_val, img0 = self.cap.read()
 
             self.frame += 1
             print('video %g/%g (%g/%g) %s: ' % (self.count + 1, self.nF, self.frame, self.nframes, path), end='')
@@ -95,7 +92,7 @@ class LoadImages:  # for inference
             # Read image
             self.count += 1
             img0 = cv2.imread(path)  # BGR
-            assert img0 is not None, 'Image Not Found ' + path
+            assert img0 is not None, f'Image Not Found {path}'
             print('image %g/%g %s: ' % (self.count, self.nF, path), end='')
 
         # Padded resize
@@ -165,7 +162,7 @@ class LoadWebcam:  # for inference
                         break
 
         # Print
-        assert ret_val, 'Camera Error %s' % self.pipe
+        assert ret_val, f'Camera Error {self.pipe}'
         img_path = 'webcam.jpg'
         print('webcam %g: ' % self.count, end='')
 
@@ -200,7 +197,7 @@ class LoadStreams:  # multiple IP or RTSP cameras
             # Start the thread to read frames from the video stream
             print('%g/%g: %s... ' % (i + 1, n, s), end='')
             cap = cv2.VideoCapture(0 if s == '0' else s)
-            assert cap.isOpened(), 'Failed to open %s' % s
+            assert cap.isOpened(), f'Failed to open {s}'
             w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
             h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
             fps = cap.get(cv2.CAP_PROP_FPS) % 100
