@@ -61,7 +61,7 @@ def get_default_device():
 
 def misclassified_images(model,test_loader,device):
     class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
-            
+
     wrong_images=[]
     wrong_label=[]
     correct_label=[]
@@ -85,13 +85,13 @@ def misclassified_images(model,test_loader,device):
 
         for i, (img, pred, correct) in enumerate(wrong_predictions[:10]):
                 img, pred, target = img.cpu().numpy(), pred.cpu(), correct.cpu()
-                
+
                 img = np.transpose(img, (1, 2, 0)) / 2 + 0.5
                 ax = fig.add_subplot(5, 5, i+1)
                 ax.axis('off')
                 ax.set_title(f'\nactual : {class_names[target.item()]}\npredicted : {class_names[pred.item()]}',fontsize=10)  
                 ax.imshow(img)  
-        
+
         plt.show()
 
 
@@ -144,8 +144,8 @@ def plot_metrics(exp_metrics):
 
 def class_level_accuracy(model, loader, device, classes):
 
-    class_correct = list(0. for i in range(len(classes)))
-    class_total = list(0. for i in range(len(classes)))
+    class_correct = [0. for _ in range(len(classes))]
+    class_total = [0. for _ in range(len(classes))]
 
     with torch.no_grad():
         for _, (images, labels) in enumerate(loader, 0):

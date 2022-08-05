@@ -76,7 +76,7 @@ def create_modules(module_defs, img_size):
 
         elif mdef['type'] == 'route':  # nn.Sequential() placeholder for 'route' layer
             layers = mdef['layers']
-            filters = sum([output_filters[l + 1 if l > 0 else l] for l in layers])
+            filters = sum(output_filters[l + 1 if l > 0 else l] for l in layers)
             routs.extend([i + l if l < 0 else l for l in layers])
             modules = FeatureConcat(layers=layers)
 
@@ -227,37 +227,37 @@ class Darknet(nn.Module):
         # Darknet Header https://github.com/AlexeyAB/darknet/issues/2914#issuecomment-496675346
         self.version = np.array([0, 2, 5], dtype=np.int32)  # (int32) version info: major, minor, revision
         self.seen = np.array([0], dtype=np.int64)  # (int64) number of images seen during training
-        self.info(verbose) if not ONNX_EXPORT else None  # print model description
+        None if ONNX_EXPORT else self.info(verbose)
 
     def forward(self, x, augment=False, verbose=False):
 
         if not augment:
             return self.forward_once(x)
-        else:  # Augment images (inference and test only) https://github.com/ultralytics/yolov3/issues/931
-            img_size = x.shape[-2:]  # height, width
-            s = [0.83, 0.67]  # scales
-            y = []
-            for i, xi in enumerate((x,
-                                    torch_utils.scale_img(x.flip(3), s[0], same_shape=False),  # flip-lr and scale
-                                    torch_utils.scale_img(x, s[1], same_shape=False),  # scale
-                                    )):
-                # cv2.imwrite('img%g.jpg' % i, 255 * xi[0].numpy().transpose((1, 2, 0))[:, :, ::-1])
-                y.append(self.forward_once(xi)[0])
+        img_size = x.shape[-2:]  # height, width
+        s = [0.83, 0.67]  # scales
+        y = [
+            self.forward_once(xi)[0]
+            for xi in (
+                x,
+                torch_utils.scale_img(x.flip(3), s[0], same_shape=False),
+                torch_utils.scale_img(x, s[1], same_shape=False),
+            )
+        ]
 
-            y[1][..., :4] /= s[0]  # scale
-            y[1][..., 0] = img_size[1] - y[1][..., 0]  # flip lr
-            y[2][..., :4] /= s[1]  # scale
+        y[1][..., :4] /= s[0]  # scale
+        y[1][..., 0] = img_size[1] - y[1][..., 0]  # flip lr
+        y[2][..., :4] /= s[1]  # scale
 
-            # for i, yi in enumerate(y):  # coco small, medium, large = < 32**2 < 96**2 <
-            #     area = yi[..., 2:4].prod(2)[:, :, None]
-            #     if i == 1:
-            #         yi *= (area < 96. ** 2).float()
-            #     elif i == 2:
-            #         yi *= (area > 32. ** 2).float()
-            #     y[i] = yi
+        # for i, yi in enumerate(y):  # coco small, medium, large = < 32**2 < 96**2 <
+        #     area = yi[..., 2:4].prod(2)[:, :, None]
+        #     if i == 1:
+        #         yi *= (area < 96. ** 2).float()
+        #     elif i == 2:
+        #         yi *= (area > 32. ** 2).float()
+        #     y[i] = yi
 
-            y = torch.cat(y, 1)
-            return y, None
+        y = torch.cat(y, 1)
+        return y, None
 
     def forward_once(self, x, augment=False, verbose=False):
         img_size = x.shape[-2:]  # height, width
@@ -324,7 +324,7 @@ class Darknet(nn.Module):
                         break
             fused_list.append(a)
         self.module_list = fused_list
-        self.info() if not ONNX_EXPORT else None  # yolov3-spp reduced from 225 to 152 layers
+        None if ONNX_EXPORT else self.info()
 
     def info(self, verbose=False):
         torch_utils.model_info(self, verbose)
@@ -353,7 +353,7 @@ def load_darknet_weights(self, weights, cutoff=-1):
         weights = np.fromfile(f, dtype=np.float32)  # the rest are weights
 
     ptr = 0
-    for i, (mdef, module) in enumerate(zip(self.module_defs[:cutoff], self.module_list[:cutoff])):
+    for mdef, module in zip(self.module_defs[:cutoff], self.module_list[:cutoff]):
         if mdef['type'] == 'convolutional':
             conv = module[0]
             if mdef['batch_normalize']:
@@ -371,13 +371,12 @@ def load_darknet_weights(self, weights, cutoff=-1):
                 ptr += nb
                 # Running Var
                 bn.running_var.data.copy_(torch.from_numpy(weights[ptr:ptr + nb]).view_as(bn.running_var))
-                ptr += nb
             else:
                 # Load conv. bias
                 nb = conv.bias.numel()
                 conv_b = torch.from_numpy(weights[ptr:ptr + nb]).view_as(conv.bias)
                 conv.bias.data.copy_(conv_b)
-                ptr += nb
+            ptr += nb
             # Load conv. weights
             nw = conv.weight.numel()  # number of weights
             conv.weight.data.copy_(torch.from_numpy(weights[ptr:ptr + nw]).view_as(conv.weight))
@@ -393,7 +392,7 @@ def save_weights(self, path='model.weights', cutoff=-1):
         self.seen.tofile(f)  # (int64) number of images seen during training
 
         # Iterate through layers
-        for i, (mdef, module) in enumerate(zip(self.module_defs[:cutoff], self.module_list[:cutoff])):
+        for mdef, module in zip(self.module_defs[:cutoff], self.module_list[:cutoff]):
             if mdef['type'] == 'convolutional':
                 conv_layer = module[0]
                 # If batch norm, load bn first
@@ -441,7 +440,8 @@ def convert(cfg='cfg/yolov3-spp.cfg', weights='weights/yolov3-spp.weights'):
 
 def attempt_download(weights):
     # Attempt to download pretrained weights if not found locally
-    msg = weights + ' missing, try downloading from https://drive.google.com/open?id=1LezFG5g3BCW6iYaV89B2i64cqEUZD7e0'
+    msg = f'{weights} missing, try downloading from https://drive.google.com/open?id=1LezFG5g3BCW6iYaV89B2i64cqEUZD7e0'
+
 
     if weights and not os.path.isfile(weights):
         d = {'yolov3-spp.weights': '16lYS4bcIdM2HdmyJBVDOvt3Trx6N3W2R',
@@ -458,11 +458,11 @@ def attempt_download(weights):
         if file in d:
             r = gdrive_download(id=d[file], name=weights)
         else:  # download from pjreddie.com
-            url = 'https://pjreddie.com/media/files/' + file
-            print('Downloading ' + url)
-            r = os.system('curl -f ' + url + ' -o ' + weights)
+            url = f'https://pjreddie.com/media/files/{file}'
+            print(f'Downloading {url}')
+            r = os.system(f'curl -f {url} -o {weights}')
 
         # Error check
         if not (r == 0 and os.path.exists(weights) and os.path.getsize(weights) > 1E6):  # weights exist and > 1MB
-            os.system('rm ' + weights)  # remove partial downloads
+            os.system(f'rm {weights}')
             raise Exception(msg)

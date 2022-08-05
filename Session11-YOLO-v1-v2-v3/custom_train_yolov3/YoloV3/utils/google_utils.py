@@ -14,7 +14,11 @@ def gdrive_download(id='1HaXkef9z6y5l4vUnCYgdmEAj61c6bfWO', name='coco.zip'):
     # from utils.google_utils import *; gdrive_download()
     t = time.time()
 
-    print('Downloading https://drive.google.com/uc?export=download&id=%s as %s... ' % (id, name), end='')
+    print(
+        f'Downloading https://drive.google.com/uc?export=download&id={id} as {name}... ',
+        end='',
+    )
+
     os.remove(name) if os.path.exists(name) else None  # remove existing
     os.remove('cookie') if os.path.exists('cookie') else None
 
@@ -37,7 +41,7 @@ def gdrive_download(id='1HaXkef9z6y5l4vUnCYgdmEAj61c6bfWO', name='coco.zip'):
     # Unzip if archive
     if name.endswith('.zip'):
         print('unzipping... ', end='')
-        os.system('unzip -q %s' % name)  # unzip
+        os.system(f'unzip -q {name}')
         os.remove(name)  # remove zip to free space
 
     print('Done (%.1fs)' % (time.time() - t))
@@ -54,9 +58,7 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
 
     blob.upload_from_filename(source_file_name)
 
-    print('File {} uploaded to {}.'.format(
-        source_file_name,
-        destination_blob_name))
+    print(f'File {source_file_name} uploaded to {destination_blob_name}.')
 
 
 def download_blob(bucket_name, source_blob_name, destination_file_name):
@@ -67,6 +69,4 @@ def download_blob(bucket_name, source_blob_name, destination_file_name):
 
     blob.download_to_filename(destination_file_name)
 
-    print('Blob {} downloaded to {}.'.format(
-        source_blob_name,
-        destination_file_name))
+    print(f'Blob {source_blob_name} downloaded to {destination_file_name}.')
